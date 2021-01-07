@@ -10,29 +10,21 @@ public class GenarateGrass : MonoBehaviour
 
     public int grassSplitCnt = 3;
     public float grassHeight = 0.3f;
+    public float grassWidth = 0.01f;
 
 
     void Start()
     {
         var grasses = new Mesh();
 
-        var unitHeight = grassHeight / (float)grassSplitCnt;
+        var proceduralGrassGeometry = new ProceduralGrassGeometry(grassWidth, grassHeight, grassSplitCnt);
+        var geo = proceduralGrassGeometry.CreateGrass(Vector3.zero, 0);
 
+        Debug.Log(geo.verticesList.Count());
 
-        grasses.vertices = new Vector3[]
-        {
-            new Vector3(0f,0f,0f),
-            new Vector3(1f,0f,0f),
-            new Vector3(0.5f,1f,0f)
-        };
-
-        // 頂点インデックスを設定
-        grasses.triangles = new[] { 0, 1, 2 };
-        grasses.SetUVs(0, new Vector2[]{
-            new Vector2(0,0),
-            new Vector2(1,0),
-            new Vector2(0,1)
-        });
+        grasses.vertices = geo.verticesList.ToArray();
+        grasses.triangles = geo.trianglesList.ToArray();
+        grasses.SetUVs(0, geo.uvList.ToArray());
 
         grasses.RecalculateNormals();
         grasses.RecalculateBounds();
