@@ -53,33 +53,47 @@ public class ProceduralGrassGeometry
                 });
     }
 
-    public (IEnumerable<Vector3> verticesList, IEnumerable<Vector2> uvList, IEnumerable<int> trianglesList) CreateGrass(Vector3 worldPosision, Quaternion rotaion, int VerticesOffset)
+    public (IEnumerable<Vector3> verticesList, IEnumerable<Vector2> uvList, IEnumerable<int> trianglesList) CreateGrass(Vector3 worldPosision, Quaternion rotaion, Vector3 scale, int VerticesOffset)
     {
         return (
-            verticesList.Select(xx => rotaion * xx + worldPosision)
+            verticesList.Select(xx => rotaion * Vector3.Scale(xx, scale) + worldPosision)
             , uvList.Select(xx => xx)
             , trianglesList.Select(xx => xx + VerticesOffset)
         );
     }
 
 
-    public List<Vector3> verticesChainList = new List<Vector3>();
-    public List<int> trianglesChainList = new List<int>();
-    public List<Vector2> uvChainList = new List<Vector2>();
+    List<Vector3> verticesChainList = new List<Vector3>();
+    List<int> trianglesChainList = new List<int>();
+    List<Vector2> uvChainList = new List<Vector2>();
 
-    public void CreateChain(Vector3 worldPosision, Quaternion rotaion)
+    public void CreateChain(Vector3 worldPosision, Quaternion rotaion, Vector3 scale)
     {
-        var geo = CreateGrass(worldPosision, rotaion, verticesChainList.Count());
+        var geo = CreateGrass(worldPosision, rotaion, scale, verticesChainList.Count());
 
         verticesChainList.AddRange(geo.verticesList);
         trianglesChainList.AddRange(geo.trianglesList);
         uvChainList.AddRange(geo.uvList);
     }
 
+    public Mesh GetMesh()
+    {
+        var mesh = new Mesh();
+        mesh.vertices = verticesChainList.ToArray();
+        mesh.triangles = trianglesChainList.ToArray(); // geo.trianglesList.ToArray();
+        mesh.SetUVs(0, uvChainList.ToArray());
+
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        mesh.RecalculateTangents();
+
+        return mesh;
+    }
+
     public void ResetChain()
     {
-        verticesChainList = null;
-        trianglesChainList = null;
-        uvChainList = null;
+        verticesChainList.Clear();
+        trianglesChainList.Clear();
+        uvChainList.Clear();
     }
 }
