@@ -79,6 +79,7 @@ public class ProceduralGrassGeometry
     public Mesh GetMesh()
     {
         var mesh = new Mesh();
+        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         mesh.vertices = verticesChainList.ToArray();
         mesh.triangles = trianglesChainList.ToArray(); // geo.trianglesList.ToArray();
         mesh.SetUVs(0, uvChainList.ToArray());

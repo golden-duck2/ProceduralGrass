@@ -472,9 +472,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 44aef01ff1ebcc044979144f29b9c9c4, type: 2}
-  grassSplitCnt: 2
+  grassSplitCnt: 4
   grassHeight: 0.1
   grassWidth: 0.003
   bend: 0.05
-  distance: 0.01
-  size: {x: 50, y: 100}
+  distance: 0.005
+  size: {x: 200, y: 200}
